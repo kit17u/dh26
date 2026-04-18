@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<button id="deviceConnect">Connect your device</button>
+<button id="testData">Test (send 40ml)</button>
+<canvas></canvas>
+{% endblock %}
+
+
+{% block scripts %}
+    <script>
+    const STATIC_URL = "{% static 'models/' %}";
+    </script>
+  <script type="module" src ="{% static './js/main.js' %}"></script>
+{% endblock %}

@@ -65,3 +65,8 @@ def generate_plant(user):
         plant_model = int(random.random()*MODEL_NUMBER)
     )
     newPlant.save()
+
+def web_socket(request):
+    template = loader.get_template('web_socket.html')
+    context = {}
+    return HttpResponse(template.render(context, request))

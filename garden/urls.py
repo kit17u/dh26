@@ -5,5 +5,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('data/', views.data, name='data'),
     path('garden/', views.garden, name='garden'),
+    path('websoc/', views.web_socket, name='websocket'),
 
 ]
