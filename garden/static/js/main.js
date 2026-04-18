@@ -3,7 +3,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Plant }  from './plant.js';
 
 let scene, camera, renderer, timer, loader;
-let plants = [];
+let plants = {};
 let plantDescriptors = [];
 let mouseX = 0;
 let mouseY = 0;
@@ -38,8 +38,7 @@ async function init(){
     const material = new THREE.MeshBasicMaterial({ color: 0xa1ee6d, side: THREE.DoubleSide });
     const plane = new THREE.Mesh(geometry, material);
 
-    plane.rotation.x = Math.PI / 2; // ✅ lay it flat
-
+    plane.rotation.x = Math.PI / 2;
     scene.add(plane);
 
 
@@ -49,8 +48,8 @@ async function init(){
     camera = new THREE.PerspectiveCamera(60, 1, 0.001, 1000);
     camera.position.z = 5;
 
-    const ambientLight = new THREE.AmbientLight(0x0058ff);
-    ambientLight.intensity = 10;
+    const ambientLight = new THREE.AmbientLight(0xffffff);
+    ambientLight.intensity = 5;
     scene.add( ambientLight );
 
     timer = new THREE.Timer();
@@ -63,34 +62,42 @@ async function init(){
     renderer.setSize( window.innerWidth, window.innerHeight );
 
     console.log(plantDescriptors);
-    generatePlants(plantDescriptors);
+    for (let plantDescriptor of plantDescriptors) {
+        generatePlant(plantDescriptor);
+    }
 
     renderer.setAnimationLoop( animate );
     document.body.appendChild( renderer.domElement );
 
 }
 
-function generatePlants(plantDescriptors) {
-    console.log(plantDescriptors);
-    
-    for (let plantDescriptor of plantDescriptors) {
-        const plantData = plantDescriptor.fields;
-        const url = `/static/models/Flowers.glb`; //test
-        
-        console.log(plantData.x);
-        try {
-            loader.load(url, (gltf) => {
-                const plant = new Plant(
-                    plantData.x, 
-                    plantData.y, 
-                    plantData.scale,
-                    gltf,
-                );
-                plants.push(plant);
-                scene.add(plant.model.scene);
-            })
-        }catch(error){
-            console.log(error);
+
+function generatePlant(plantDescriptor) {
+    const plantData = plantDescriptor.fields;
+    const url = `/static/models/Flowers.glb`; //test
+    try {
+        loader.load(url, (gltf) => {
+            const plant = new Plant(
+                plantDescriptor.pk,
+                plantData.x, 
+                plantData.y, 
+                plantData.scale,
+                gltf,
+            );
+            plants[plantDescriptor.pk] = plant;
+            scene.add(plant.model.scene);
+        })
+    }catch(error){
+        console.log(error);
+    }
+}
+
+function updatePlants(){
+    for(let plantDescriptor of plantDescriptors){
+        if(plantDescriptor.pk in plants){
+            plants[plantDescriptor.pk].scale = plantDescriptor.fields.scale;
+        }else{
+            generatePlant(plantDescriptor);
         }
     }
 }
@@ -101,8 +108,8 @@ function animate() {
     const t  = timer.getElapsed();
     const dt = timer.getDelta();
 
-    for(let plant of plants){
-        plant.update(t, dt);
+    for (const id in plants) {
+        plants[id].update(t, dt);
     }
 
     camera.position.x += ( mouseX - camera.position.x ) * .05;
@@ -131,5 +138,6 @@ async function sendData(data){
 async function fetchGarden(){
     const res = await fetch('/garden/');
     plantDescriptors = await res.json();
+    updatePlants();
     console.log(plantDescriptors);
 }

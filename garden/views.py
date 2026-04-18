@@ -45,14 +45,15 @@ def garden(request):
 
 def water_plants(user, value):
     # First, generate some new plants
-    for i in range(value//20):
+    for i in range(value//10):
         generate_plant(user)
 
     plants = Plant.objects.filter(user=user)
 
     # Then update their scales:
     for plant in plants:
-        plant.scale += 0.1 + random.random()*0.2
+        plant.scale += 0.5 + random.random()*0.1
+        plant.scale = min(plant.scale, 1)
         plant.save()
         print(plant)
 
