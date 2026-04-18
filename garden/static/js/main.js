@@ -10,6 +10,8 @@ let mouseY = 0;
 let windowHalfX = window.innerWidth / 2;
 let windowHalfY = window.innerHeight / 2;
 
+const canvas = document.getElementById('gardenCanvas');
+
 /**
  * Add eventlisteners
  */
@@ -32,9 +34,10 @@ async function init(){
     scene = new THREE.Scene();
     scene.add(new THREE.GridHelper(2));
     scene.add(new THREE.AxesHelper(2));
+    scene.background = new THREE.Color(0xa1ee6d); 
 
     // Add plane
-    const geometry = new THREE.PlaneGeometry(10, 10);
+    const geometry = new THREE.PlaneGeometry(5, 5);
     const material = new THREE.MeshBasicMaterial({ color: 0xa1ee6d, side: THREE.DoubleSide });
     const plane = new THREE.Mesh(geometry, material);
 
@@ -45,7 +48,8 @@ async function init(){
     /**
      * Set perspective camera
      */
-    camera = new THREE.PerspectiveCamera(60, 1, 0.001, 1000);
+    camera = new THREE.PerspectiveCamera(60, canvas.clientWidth / canvas.clientHeight, 0.001, 1000);
+    //camera = new THREE.PerspectiveCamera(60, 1, 0.001, 1000);
     camera.position.z = 5;
 
     const ambientLight = new THREE.AmbientLight(0xffffff);
@@ -58,7 +62,7 @@ async function init(){
     /**
      * Set renderer
      */
-    renderer = new THREE.WebGLRenderer({alpha: true});
+    renderer = new THREE.WebGLRenderer({canvas});
     renderer.setSize( window.innerWidth, window.innerHeight );
 
     console.log(plantDescriptors);

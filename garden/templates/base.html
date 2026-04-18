@@ -5,6 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static './css/style.css'%}">
     <script type="importmap">
         {
             "imports": {
@@ -17,7 +18,7 @@
 
   </head>
   <body>
-    <navbar> 
+    <navbar class="navbar"> 
         
         {% if user.is_authenticated %}
         <form action="{% url 'logout' %}" method="post">
@@ -25,16 +26,14 @@
             <button type="submit">Log Out</button>
         </form>
         {% else %}
-        <a href="{% url 'login' %}">log in</a>
+        <!--<a href="{% url 'login' %}">log in</a>-->
         {% endif %}
-
     </navbar>
-    Hello world!
     {% block content %}
     {% endblock %}
 
   </body>
-  <canvas>
+  <canvas id="gardenCanvas">
   </canvas>
 {% block scripts %}{% endblock %}
 

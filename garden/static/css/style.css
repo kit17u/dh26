@@ -1,0 +1,38 @@
+#gardenCanvas {
+    position: fixed;
+    left: 0px;
+    top:0px;
+    z-index:-1;
+    background-color: #a1ee6d;
+    width: 100%;
+    height: 100%;
+}
+body{
+    background-color: #a1ee6d;
+    font-family: monospace !important;
+    color: rgb(34, 34, 34) !important;
+    font-size: 13px !important;
+    position: absolute;
+}
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    height: 24px;
+}
+
+.navbar a,
+.navbar button {
+    background: none;
+    border: none;
+    font-size: 14px;
+    color: #666;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.navbar a:hover,
+.navbar button:hover {
+    color: #000;
+}

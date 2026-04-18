@@ -20,9 +20,10 @@ export class Plant{
         this.flower = model.scene.getObjectByName(!);
         this.*/
         const material = new THREE.Material()
-        const scaleFactor = 0.2;
-        this.model.scene.position.x = this.x * 5 - 2.5;
-        this.model.scene.position.z = this.y * 5 - 2.5;
+        const scaleFactor = 0.4;
+        const distributionFactor = 8;
+        this.model.scene.position.x = this.x * distributionFactor - distributionFactor/2;
+        this.model.scene.position.z = this.y * distributionFactor - distributionFactor/2;
         this.model.scene.scale.set(scaleFactor, scaleFactor, scaleFactor);
         /*for(let mesh of this.model.scene){
             mesh.scale *= 0.5;
