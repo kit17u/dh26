@@ -7,7 +7,7 @@ from django.core import serializers
 import random
 from .models import Data, Plant
 
-MODEL_NUMBER = 1
+MODEL_NUMBER = 4
 
 @login_required
 def index(request):

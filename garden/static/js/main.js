@@ -2,6 +2,13 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Plant }  from './plant.js';
 
+const MODEL_NAMES = [
+    "Flower1.glb",
+    "Flower2.glb",
+    "Flower3.glb",
+    "Greens1.glb"
+];
+
 let scene, camera, renderer, timer, loader;
 let plants = {};
 let plantDescriptors = [];
@@ -78,7 +85,7 @@ async function init(){
 
 function generatePlant(plantDescriptor) {
     const plantData = plantDescriptor.fields;
-    const url = `/static/models/Flowers.glb`; //test
+    const url = `/static/models/` + MODEL_NAMES[plantData.plant_model]; //test
     try {
         loader.load(url, (gltf) => {
             const plant = new Plant(
