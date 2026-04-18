@@ -12,12 +12,27 @@ export class Plant{
         this.y = y;
         this.scale = scale;
         this.model = model;
+        this.speed = 1 + Math.random();
+        this.model.scene.scale.set(0.5, 0.5, 0.5); 
+        //TODO: define each model and attach custom material
+        /*
+        this.flower = model.scene.getObjectByName(!);
+        this.*/
+        const material = new THREE.Material()
+
+        this.model.scene.position.x = this.x * 10 - 5;
+        this.model.scene.position.z = this.y * 10 - 5;
+        /*for(let mesh of this.model.scene){
+            mesh.scale *= 0.5;
+        }*/
 
         this.mixer = new THREE.AnimationMixer( this.model.scene );
 
         const animations = this.model.animations;
-        this.action = this.mixer.clipAction( animations[0] );
-        this.action.play();
+        this.action1 = this.mixer.clipAction( animations[0] );
+        this.action1.play();
+        this.action2 = this.mixer.clipAction( animations[1] );
+        this.action2.play();
     }
 
     update(t, dt){
@@ -25,6 +40,6 @@ export class Plant{
     }
 
     animate(dt){
-        this.mixer.update(dt);
+        this.mixer.update(dt*this.speed);
     }
 }

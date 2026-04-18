@@ -3,6 +3,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Plant }  from './plant.js';
 
 let scene, camera, renderer, timer, loader;
+let plants = [];
 let plantDescriptors = [];
 let mouseX = 0;
 let mouseY = 0;
@@ -32,6 +33,16 @@ async function init(){
     scene.add(new THREE.GridHelper(2));
     scene.add(new THREE.AxesHelper(2));
 
+    // Add plane
+    const geometry = new THREE.PlaneGeometry(10, 10);
+    const material = new THREE.MeshBasicMaterial({ color: 0xa1ee6d, side: THREE.DoubleSide });
+    const plane = new THREE.Mesh(geometry, material);
+
+    plane.rotation.x = Math.PI / 2; // ✅ lay it flat
+
+    scene.add(plane);
+
+
     /**
      * Set perspective camera
      */
@@ -39,7 +50,7 @@ async function init(){
     camera.position.z = 5;
 
     const ambientLight = new THREE.AmbientLight(0x0058ff);
-    ambientLight.intensity = 4;
+    ambientLight.intensity = 10;
     scene.add( ambientLight );
 
     timer = new THREE.Timer();
@@ -75,6 +86,7 @@ function generatePlants(plantDescriptors) {
                     plantData.scale,
                     gltf,
                 );
+                plants.push(plant);
                 scene.add(plant.model.scene);
             })
         }catch(error){
@@ -86,8 +98,12 @@ function generatePlants(plantDescriptors) {
 function animate() {
     
     timer.update();
-    const t  = timer.getElapsed()*1000;
-    const dt = timer.getDelta()*1000;
+    const t  = timer.getElapsed();
+    const dt = timer.getDelta();
+
+    for(let plant of plants){
+        plant.update(t, dt);
+    }
 
     camera.position.x += ( mouseX - camera.position.x ) * .05;
     camera.position.y += ( - (mouseY -  windowHalfY/100) - camera.position.y ) * .05;
