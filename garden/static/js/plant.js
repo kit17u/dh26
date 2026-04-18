@@ -51,7 +51,8 @@ export class Plant{
 
     update(t, dt){
         //  Check if scale changed
-        if(this.scale > this.action1.time){
+        const currentAnimState = (1/this.action1.getClip().duration)*this.action1.time;
+        if(this.scale > currentAnimState){
             this.grow()
         }
         this.animate(dt);
@@ -61,7 +62,8 @@ export class Plant{
         this.mixer.update(dt*this.speed);
 
         // Only allow to grow until it reaches scale
-        if ((1/this.action1.getClip().duration)*this.action1.time >= this.scale) {
+        const currentAnimState = (1/this.action1.getClip().duration)*this.action1.time;
+        if (currentAnimState >= this.scale) {
             this.action1.paused = true;
             this.action2.paused = true;
         }
