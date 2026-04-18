@@ -64,21 +64,22 @@ function generatePlants(plantDescriptors) {
     
     for (let plantDescriptor of plantDescriptors) {
         const plantData = plantDescriptor.fields;
-        const url = `/static/models/neontetra_anim.glb`; //test
+        const url = `/static/models/Flowers.glb`; //test
         
+        console.log(plantData.x);
         try {
-        loader.load(url, (gltf) => {
-            const plant = new Plant(
-                x           = plantData.x, 
-                y           = plantData.y, 
-                scale       = plantData.scale,
-                model       = gltf,
-            );
-            scene.add(plant.model.mesh)
-        })
-    }catch(error){
-        console.log(error);
-    }
+            loader.load(url, (gltf) => {
+                const plant = new Plant(
+                    plantData.x, 
+                    plantData.y, 
+                    plantData.scale,
+                    gltf,
+                );
+                scene.add(plant.model.scene);
+            })
+        }catch(error){
+            console.log(error);
+        }
     }
 }
 
