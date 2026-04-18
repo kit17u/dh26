@@ -9,6 +9,10 @@ let mouseY = 0;
 let windowHalfX = window.innerWidth / 2;
 let windowHalfY = window.innerHeight / 2;
 
+/**
+ * Add eventlisteners
+ */
+document.addEventListener( 'mousemove', onDocumentMouseMove );
 const sendButton = document.getElementById("testData");
 sendButton.addEventListener('click', sendData(40));
 
