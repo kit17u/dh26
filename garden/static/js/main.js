@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Plant }  from './plant.js';
 
-let scene, camera, renderer, timer;
+let scene, camera, renderer, timer, loader;
 let plantDescriptors = [];
 let mouseX = 0;
 let mouseY = 0;
@@ -14,28 +14,19 @@ let windowHalfY = window.innerHeight / 2;
  */
 document.addEventListener( 'mousemove', onDocumentMouseMove );
 const sendButton = document.getElementById("testData");
-sendButton.addEventListener('click', sendData(40));
+sendButton.addEventListener('click', () => sendData(40));
 
 await fetchGarden();
 
 init();
 
-async function sendData(data){
-    console.log('sending data');
-    await fetch('/data/?value=40')
-    .then(
-        fetchGarden()
-    )
-}
-
-async function fetchGarden(){
-    plantDescriptors = await fetch('/garden/');
-}
 
 /**
  * scene init
  */
 async function init(){
+    
+    loader = new GLTFLoader();
 
     scene = new THREE.Scene();
     scene.add(new THREE.GridHelper(2));
@@ -69,8 +60,26 @@ async function init(){
 }
 
 function generatePlants(plantDescriptors) {
-    /*for (let plantDescriptor of plantDescriptors) {
-    }*/
+    console.log(plantDescriptors);
+    
+    for (let plantDescriptor of plantDescriptors) {
+        const plantData = plantDescriptor.fields;
+        const url = `/static/models/neontetra_anim.glb`; //test
+        
+        try {
+        loader.load(url, (gltf) => {
+            const plant = new Plant(
+                x           = plantData.x, 
+                y           = plantData.y, 
+                scale       = plantData.scale,
+                model       = gltf,
+            );
+            scene.add(plant.model.mesh)
+        })
+    }catch(error){
+        console.log(error);
+    }
+    }
 }
 
 function animate() {
@@ -92,4 +101,18 @@ function onDocumentMouseMove( event ) {
     mouseX = ( event.clientX - windowHalfX ) / 100;
     mouseY = ( event.clientY - windowHalfY ) / 100;
 
+}
+
+async function sendData(data){
+    console.log('sending data');
+    await fetch('/data/?value=40')
+    .then(
+        fetchGarden()
+    )
+}
+
+async function fetchGarden(){
+    const res = await fetch('/garden/');
+    plantDescriptors = await res.json();
+    console.log(plantDescriptors);
 }
