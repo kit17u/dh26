@@ -219,7 +219,7 @@ async function sendData(data) {
     value = Math.round(parseFloat(data));
   }
 
-  if (isNaN(value) || value < 10) {
+  if (isNaN(value) || value < 2) {
     console.log('invalid value, skipping request:', value);
     return;
   }
