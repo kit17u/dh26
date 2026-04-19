@@ -19,8 +19,11 @@
   </head>
   <body>
     <navbar class="navbar"> 
+        {% block buttons %}
+        {% endblock %}
         
         {% if user.is_authenticated %}
+        Logged in as {{ user.name }}
         <form action="{% url 'logout' %}" method="post">
             {% csrf_token %}
             <button type="submit">Log Out</button>

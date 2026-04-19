@@ -7,7 +7,7 @@ import * as THREE from 'three';
  * @param model loaded GLTF/GLB object
  */
 export class Plant{
-    constructor(id, x, y, scale, model){
+    constructor(id, x, y, scale, model, {size}){
         this.id    = id;
         this.x     = x;
         this.y     = y;
@@ -20,7 +20,7 @@ export class Plant{
         this.flower = model.scene.getObjectByName(!);
         this.*/
         const material = new THREE.Material()
-        const scaleFactor = 0.4;
+        const scaleFactor = 0.4*size?size:1;
         const distributionFactor = 8;
         this.model.scene.position.x = this.x * distributionFactor - distributionFactor/2;
         this.model.scene.position.z = this.y * distributionFactor - distributionFactor/2;

@@ -39,12 +39,12 @@ async function init(){
     loader = new GLTFLoader();
 
     scene = new THREE.Scene();
-    scene.add(new THREE.GridHelper(2));
-    scene.add(new THREE.AxesHelper(2));
+    //scene.add(new THREE.GridHelper(2));
+    //scene.add(new THREE.AxesHelper(2));
     scene.background = new THREE.Color(0xa1ee6d); 
 
     // Add plane
-    const geometry = new THREE.PlaneGeometry(5, 5);
+    const geometry = new THREE.PlaneGeometry(25, 25);
     const material = new THREE.MeshBasicMaterial({ color: 0xa1ee6d, side: THREE.DoubleSide });
     const plane = new THREE.Mesh(geometry, material);
 
@@ -94,6 +94,7 @@ function generatePlant(plantDescriptor) {
                 plantData.y, 
                 plantData.scale,
                 gltf,
+                {size:(plantData.plant_model==2)?0.2:0.1},
             );
             plants[plantDescriptor.pk] = plant;
             scene.add(plant.model.scene);
