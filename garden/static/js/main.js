@@ -2,6 +2,12 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Plant }  from './plant.js';
 
+const devices = await navigator.usb.getDevices();
+console.log(devices);
+// Check if serial can see any ports already granted
+const ports = await navigator.serial.getPorts();
+console.log(ports);
+
 const MODEL_NAMES = [
     "Flower1.glb",
     "Flower2.glb",
@@ -25,6 +31,46 @@ const canvas = document.getElementById('gardenCanvas');
 document.addEventListener( 'mousemove', onDocumentMouseMove );
 const sendButton = document.getElementById("testData");
 sendButton.addEventListener('click', () => sendData(40));
+const serialButton = document.getElementById('deviceConnect');
+let reader;
+
+serialButton.addEventListener('click', async function() {
+  try {
+    const port = await navigator.serial.requestPort({ filters: [] });
+    await port.open({ baudRate: 9600 });
+    console.log("Connected!");
+
+    const decoder = new TextDecoderStream();
+    port.readable.pipeTo(decoder.writable);
+
+    reader = decoder.readable
+      .pipeThrough(new TransformStream(new LineBreakTransformer()))
+      .getReader();
+
+    // Read loop
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      console.log("Weight:", value);
+    }
+
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+class LineBreakTransformer {
+  constructor() { this.buffer = ""; }
+  transform(chunk, controller) {
+    this.buffer += chunk;
+    const lines = this.buffer.split("\n");
+    this.buffer = lines.pop();
+    lines.forEach(line => controller.enqueue(line));
+  }
+  flush(controller) {
+    controller.enqueue(this.buffer);
+  }
+}
 
 await fetchGarden();
 
