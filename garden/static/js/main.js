@@ -10,10 +10,10 @@ const MODEL_NAMES_FLOWERS = [
 ];
 
 const MODEL_NAMES_TREES = [
-    "Greens1.glb",
-    "Greens1.glb",
-    "Greens1.glb",
-    "Greens1.glb"
+    "listovec1.glb",
+    "grm.glb",
+    "smreka.glb",
+    "drevo1.glb"
 ];
 
 
@@ -145,12 +145,15 @@ async function init(){
 function generatePlant(plantDescriptor) {
     const plantData = plantDescriptor.fields;
     let modelName;
+    let size;
     switch (gardenChoice) {
     case 0:
         modelName = MODEL_NAMES_TREES[plantData.plant_model];
+        size = 0.03;
         break;
     default:
         modelName = MODEL_NAMES_FLOWERS[plantData.plant_model];
+        size = (plantData.plant_model==2)?0.2:0.1;
         break;
     }
     const url = `/static/models/` + modelName;//test
@@ -162,7 +165,7 @@ function generatePlant(plantDescriptor) {
                 plantData.y, 
                 plantData.scale,
                 gltf,
-                {size:(plantData.plant_model==2)?0.2:0.1},
+                {size:size},
             );
             plants[plantDescriptor.pk] = plant;
             scene.add(plant.model.scene);
@@ -209,7 +212,6 @@ function onDocumentMouseMove( event ) {
 
 async function sendData(data) {
   console.log('sending data');
-
   let value;
   if (Number.isInteger(data)) {
     value = data;
@@ -217,8 +219,12 @@ async function sendData(data) {
     value = Math.round(parseFloat(data));
   }
 
-  console.log('sending value:', value);
+  if (isNaN(value) || value < 10) {
+    console.log('invalid value, skipping request:', value);
+    return;
+  }
 
+  console.log('sending value:', value);
   await fetch(`/data/?value=${value}`)
     .then(() => fetchGarden());
 }
