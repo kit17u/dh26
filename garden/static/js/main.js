@@ -26,6 +26,25 @@ document.addEventListener( 'mousemove', onDocumentMouseMove );
 const sendButton = document.getElementById("testData");
 sendButton.addEventListener('click', () => sendData(40));
 
+const serialButton = document.getElementById('deviceConnect');
+serialButton.addEventListener('click', async function() {
+
+    // Prompt user to select any serial port.
+    const port = await navigator.usb
+        .requestDevice({ filters: [{ vendorId: 0x2341 }] })
+        .then((device) => {
+            console.log(device.productName); // "Arduino Micro"
+            console.log(device.manufacturerName); // "Arduino LLC"
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+
+    // Wait for the serial port to open.
+    console.log(port);
+    //await port.open({ baudRate: 9600 });
+});
+
 await fetchGarden();
 
 init();
@@ -152,4 +171,13 @@ async function fetchGarden(){
     plantDescriptors = await res.json();
     updatePlants();
     console.log(plantDescriptors);
+}
+
+async function connectUsbDevice() {
+    // Prompt user to select any serial port.
+    const port = await navigator.serial.requestPort();
+
+    // Wait for the serial port to open.
+    await port.open({ baudRate: 9600 });
+
 }
