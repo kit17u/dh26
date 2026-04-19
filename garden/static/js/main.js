@@ -51,7 +51,8 @@ serialButton.addEventListener('click', async function() {
     while (true) {
       const { value, done } = await reader.read();
       if (done) break;
-      console.log("Weight:", value);
+
+      //console.log("Weight:", value);
     }
 
   } catch (error) {
