@@ -2,18 +2,23 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Plant }  from './plant.js';
 
-const devices = await navigator.usb.getDevices();
-console.log(devices);
-// Check if serial can see any ports already granted
-const ports = await navigator.serial.getPorts();
-console.log(ports);
-
-const MODEL_NAMES = [
+const MODEL_NAMES_FLOWERS = [
     "Flower1.glb",
     "Flower2.glb",
     "Flower3.glb",
     "Greens1.glb"
 ];
+
+const MODEL_NAMES_TREES = [
+    "Greens1.glb",
+    "Greens1.glb",
+    "Greens1.glb",
+    "Greens1.glb"
+];
+
+
+let gardenChoice = localStorage.getItem('gardenChoice') ?? 0;
+gardenChoice = parseInt(gardenChoice);
 
 let scene, camera, renderer, timer, loader;
 let plants = {};
@@ -31,6 +36,13 @@ const canvas = document.getElementById('gardenCanvas');
 document.addEventListener( 'mousemove', onDocumentMouseMove );
 const sendButton = document.getElementById("testData");
 sendButton.addEventListener('click', () => sendData(40));
+
+const gardenButton = document.getElementById("switchGarden");
+gardenButton.addEventListener('click', () => {
+    localStorage.setItem('gardenChoice', (gardenChoice==0)?1:0);
+    location.reload();
+});
+
 const serialButton = document.getElementById('deviceConnect');
 let reader;
 
@@ -51,7 +63,7 @@ serialButton.addEventListener('click', async function() {
     while (true) {
       const { value, done } = await reader.read();
       if (done) break;
-
+        sendData(value);
       //console.log("Weight:", value);
     }
 
@@ -132,7 +144,16 @@ async function init(){
 
 function generatePlant(plantDescriptor) {
     const plantData = plantDescriptor.fields;
-    const url = `/static/models/` + MODEL_NAMES[plantData.plant_model]; //test
+    let modelName;
+    switch (gardenChoice) {
+    case 0:
+        modelName = MODEL_NAMES_TREES[plantData.plant_model];
+        break;
+    default:
+        modelName = MODEL_NAMES_FLOWERS[plantData.plant_model];
+        break;
+    }
+    const url = `/static/models/` + modelName;//test
     try {
         loader.load(url, (gltf) => {
             const plant = new Plant(
@@ -186,12 +207,20 @@ function onDocumentMouseMove( event ) {
 
 }
 
-async function sendData(data){
-    console.log('sending data');
-    await fetch('/data/?value=40')
-    .then(
-        fetchGarden()
-    )
+async function sendData(data) {
+  console.log('sending data');
+
+  let value;
+  if (Number.isInteger(data)) {
+    value = data;
+  } else {
+    value = Math.round(parseFloat(data));
+  }
+
+  console.log('sending value:', value);
+
+  await fetch(`/data/?value=${value}`)
+    .then(() => fetchGarden());
 }
 
 async function fetchGarden(){
