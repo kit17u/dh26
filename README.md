@@ -1,6 +1,6 @@
 # HydroGarden
 
-![](./screenshots/hydro_garden_screenshot.png)
+![image](./screenshots/hydro_garden_screenshot.png)
 
 ## 1. Introduction
 
