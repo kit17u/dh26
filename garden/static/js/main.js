@@ -23,6 +23,7 @@ gardenChoice = parseInt(gardenChoice);
 let scene, camera, renderer, timer, loader;
 let plants = {};
 let plantDescriptors = [];
+let intakeData = [];
 let intakeValue = 0;
 let mouseX = 0;
 let mouseY = 0;
@@ -240,7 +241,8 @@ async function fetchGarden() {
     console.log(json);
     plantDescriptors = JSON.parse(json.plants);
     intakeValue = json.intakeToday;
+    intakeData = json.data;
     updatePlants();
     setIntakeValue();
-    console.log(plantDescriptors);
+    console.log(intakeData);
 }

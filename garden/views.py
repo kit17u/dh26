@@ -45,7 +45,7 @@ def garden(request):
     plants = Plant.objects.filter(user=request.user)
     data = Data.objects.filter(user=request.user)
     dataToday = Data.objects.filter(user=request.user)
-    total = Data.objects.filter(user=request.user).aggregate(Sum('value'))['value__sum']
+    total = Data.objects.filter(user=request.user).aggregate(Sum('value'))['value__sum'] or 0
     return JsonResponse({
         "intakeToday": total,
         "data": serializers.serialize("json", data),
