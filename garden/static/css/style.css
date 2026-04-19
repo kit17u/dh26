@@ -24,6 +24,7 @@ body{
 
 .navbar a,
 .navbar button {
+    font-family: monospace !important;
     background: none;
     border: none;
     font-size: 14px;
@@ -100,6 +101,7 @@ body{
 }
 .water-intake {
     font-family: 'Helvetica';
+    font-weight:800;
     font-size: 168px;
     color: #16ad3c;
 }

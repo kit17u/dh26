@@ -151,7 +151,7 @@ function generatePlant(plantDescriptor) {
     switch (gardenChoice) {
     case 0:
         modelName = MODEL_NAMES_TREES[plantData.plant_model];
-        size = 0.03;
+        size = (plantData.plant_model==3)?0.06:0.03;
         break;
     default:
         modelName = MODEL_NAMES_FLOWERS[plantData.plant_model];
