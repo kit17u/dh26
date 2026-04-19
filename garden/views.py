@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.contrib.auth.forms import UserCreationForm
 from .forms import CustomUserCreationForm
+from django.db.models import Sum
 
 import random
 from .models import Data, Plant
@@ -42,8 +43,14 @@ def data(request):
 def garden(request):
     # Get user's plants from database
     plants = Plant.objects.filter(user=request.user)
-    plantsJson = serializers.serialize("json", plants)
-    return HttpResponse(plantsJson, content_type = "application/json")
+    data = Data.objects.filter(user=request.user)
+    dataToday = Data.objects.filter(user=request.user)
+    total = Data.objects.filter(user=request.user).aggregate(Sum('value'))['value__sum']
+    return JsonResponse({
+        "intakeToday": total,
+        "data": serializers.serialize("json", data),
+        "plants": serializers.serialize("json", plants),
+    })
 
 def water_plants(user, value):
     # First, generate some new plants

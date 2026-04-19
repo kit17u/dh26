@@ -23,6 +23,7 @@ gardenChoice = parseInt(gardenChoice);
 let scene, camera, renderer, timer, loader;
 let plants = {};
 let plantDescriptors = [];
+let intakeValue = 0;
 let mouseX = 0;
 let mouseY = 0;
 let windowHalfX = window.innerWidth / 2;
@@ -88,7 +89,7 @@ class LineBreakTransformer {
 await fetchGarden();
 
 init();
-
+setIntakeValue();
 
 /**
  * scene init
@@ -203,6 +204,11 @@ function animate() {
     renderer.render( scene, camera );
 }
 
+function setIntakeValue() {
+    const intakeElement = document.getElementById("intake");
+    intakeElement.textContent = intakeValue;
+}
+
 function onDocumentMouseMove( event ) {
 
     mouseX = ( event.clientX - windowHalfX ) / 100;
@@ -228,10 +234,13 @@ async function sendData(data) {
   await fetch(`/data/?value=${value}`)
     .then(() => fetchGarden());
 }
-
-async function fetchGarden(){
+async function fetchGarden() {
     const res = await fetch('/garden/');
-    plantDescriptors = await res.json();
+    const json = await res.json();
+    console.log(json);
+    plantDescriptors = JSON.parse(json.plants);
+    intakeValue = json.intakeToday;
     updatePlants();
+    setIntakeValue();
     console.log(plantDescriptors);
 }
