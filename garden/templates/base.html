@@ -18,12 +18,12 @@
 
   </head>
   <body>
-    <navbar class="navbar"> 
+    <nav class="navbar"> 
         {% block buttons %}
         {% endblock %}
         
         {% if user.is_authenticated %}
-        Logged in as {{ user.name }}
+        Logged in as {{ user.username }}
         <form action="{% url 'logout' %}" method="post">
             {% csrf_token %}
             <button type="submit">Log Out</button>
@@ -31,7 +31,7 @@
         {% else %}
         <!--<a href="{% url 'login' %}">log in</a>-->
         {% endif %}
-    </navbar>
+    </nav>
     {% block content %}
     {% endblock %}
 

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="login-container">
+  <div class="login-card">
+    <h2>Register</h2>
+
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label>{{ form.username.label }}</label>
+        {{ form.username }}
+      </div>
+
+      <div class="form-group">
+        <label>{{ form.email.label }}</label>
+        {{ form.email }}
+      </div>
+
+      <div class="form-group">
+        <label>{{ form.password1.label }}</label>
+        {{ form.password1 }}
+      </div>
+
+      <div class="form-group">
+        <label>{{ form.password2.label }}</label>
+        {{ form.password2 }}
+      </div>
+
+      <button type="submit" class="login-btn">Create Account</button>
+    </form>
+
+    <p style="text-align:center; margin-top:10px;">
+      Already have an account?
+      <a href="{% url 'login' %}">Log in</a>
+    </p>
+  </div>
+</div>
+{% endblock %}
